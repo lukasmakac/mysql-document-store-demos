@@ -151,22 +151,24 @@ public class ScoreService {
     
     public ArrayList<Object> getAggregateCourseScore() throws JsonProcessingException {
         Session session = getSession();
-        String sql = "WITH aggScores AS " +
-                "            (SELECT doc ->> '$.course.name' course, " +
-                "                MIN(score)              minScore, " +
-                "                MAX(score)              maxScore, " +
-                "                number " +
-                "            FROM scores, " +
-                "                JSON_TABLE(doc, '$.holeScores[*]' " +
-                "                    COLUMNS ( " +
-                "                        score INT PATH '$.score', " +
-                "                        number INT PATH '$.number')) AS scores " +
-                "            GROUP BY course, number " +
-                "            ORDER BY course, number) " +
-                "        SELECT JSON_OBJECT('courseName', course, 'bestScore', sum(minScore)) agg" +
-                "        FROM aggScores " +
-                "        GROUP BY course " +
-                "        ORDER BY course;";
+        String sql = """
+        WITH aggScores AS
+                    (SELECT doc ->> '$.course.name' course,
+                        MIN(score)              minScore,
+                        MAX(score)              maxScore,
+                        number
+                    FROM scores,
+                        JSON_TABLE(doc, '$.holeScores[*]'
+                            COLUMNS (
+                                score INT PATH '$.score',
+                                number INT PATH '$.number')) AS scores
+                    GROUP BY course, number
+                    ORDER BY course, number)
+                SELECT JSON_OBJECT('courseName', course, 'bestScore', sum(minScore)) agg
+                FROM aggScores
+                GROUP BY course
+                ORDER BY course;
+        """;
         SqlStatement query = session.sql(sql);
         SqlResult result = query.execute();
         ArrayList<Object> docs = cleanSqlResults(result.fetchAll(), "agg");
