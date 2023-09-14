@@ -1,5 +1,9 @@
 package com.boyzoid.repository;
 
-public class ScoreRepository {
+import io.micronaut.data.repository.CrudRepository;
+
+public interface ScoreRepository extends CrudRepository<Object, Long> {
+
+
 
 }
