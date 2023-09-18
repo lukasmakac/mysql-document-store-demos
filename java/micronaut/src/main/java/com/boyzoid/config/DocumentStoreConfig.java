@@ -4,58 +4,73 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 
 @ConfigurationProperties("docstore")
 public class DocumentStoreConfig {
-    private String user;
-    private String password;
-    private String host;
-    private Integer port;
+    private String url;
+
     private String schema;
-    private String collection;
 
-    public String getUser(){
-        return user;
+    private Pooling pooling;
+
+    public String getUrl() {
+        return url;
     }
 
-    public void setUser(String user){
-        this.user = user;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getPassword(){
-        return password;
+    public Pooling getPooling() {
+        return pooling;
     }
 
-    public void setPassword(String password){
-        this.password = password;
+    public void setPooling(Pooling pooling) {
+        this.pooling = pooling;
     }
 
-    public String getHost(){
-        return host;
-    }
-
-    public void setHost(String host){
-        this.host = host;
-    }
-
-    public Integer getPort(){
-        return port;
-    }
-
-    public void setPort(Integer port){
-        this.port = port;
-    }
-
-    public String getSchema(){
+    public String getSchema() {
         return schema;
     }
 
-    public void setSchema(String schema){
+    public void setSchema(String schema) {
         this.schema = schema;
     }
 
-    public String getCollection(){
-        return collection;
-    }
+    @ConfigurationProperties("pooling")
+    static class Pooling {
+        private Boolean enabled;
+        private Integer maxSize;
+        private Integer maxIdleTime;
+        private Integer queueTimeout;
 
-    public void setCollection(String collection){
-        this.collection = collection;
+        public Boolean getEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(Boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public Integer getMaxSize() {
+            return maxSize;
+        }
+
+        public void setMaxSize(Integer maxSize) {
+            this.maxSize = maxSize;
+        }
+
+        public Integer getMaxIdleTime() {
+            return maxIdleTime;
+        }
+
+        public void setMaxIdleTime(Integer maxIdleTime) {
+            this.maxIdleTime = maxIdleTime;
+        }
+
+        public Integer getQueueTimeout() {
+            return queueTimeout;
+        }
+
+        public void setQueueTimeout(Integer queueTimeout) {
+            this.queueTimeout = queueTimeout;
+        }
     }
 }
